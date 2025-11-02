@@ -1,5 +1,5 @@
 public struct LogContext: LogContextStoring, LogContextReporting {
-  private var labels: [String] = []
+  public private(set) var labels: [String] = []
 
   private var environment = LogContextStore()
   private var debugDetail = LogContextStore()
@@ -13,37 +13,15 @@ public struct LogContext: LogContextStoring, LogContextReporting {
     labeled(.info).description
   }
 
+  public mutating func addLabels(_ labels: [String]) {
+    for label in labels {
+      addLabel(label)
+    }
+  }
+
   public mutating func addLabel(_ label: String) {
     if labels.contains(label) { return }
     labels.append(label)
-  }
-
-  public var trace: LogOutput {
-    environment.getOutput(for: .trace)
-  }
-
-  public var debug: LogOutput {
-    environment.getOutput(for: .debug).appending(debugDetail.getOutput(for: .debug))
-  }
-
-  public var info: LogOutput {
-    environment.getOutput(for: .info)
-  }
-
-  public var notice: LogOutput {
-    warning
-  }
-
-  public var warning: LogOutput {
-    error
-  }
-
-  public var error: LogOutput {
-    critical
-  }
-
-  public var critical: LogOutput {
-    environment.getOutput(for: .critical).appending(debugDetail.getOutput(for: .critical))
   }
 
   public init(_ builder: StructBuilder<LogContext>? = nil) {
@@ -54,13 +32,28 @@ public struct LogContext: LogContextStoring, LogContextReporting {
 
   func getOutput(for scenario: LogScenario) -> LogOutput {
     switch scenario {
-    case .trace: trace
-    case .debug: debug
-    case .info: info
-    case .notice: notice
-    case .warning: warning
-    case .error: error
-    case .critical: critical
+    case .trace: environment.getOutput(for: .trace)
+    case .debug:
+      environment
+        .getOutput(for: .debug)
+        .appending(debugDetail.getOutput(for: .debug))
+    case .info: environment.getOutput(for: .info)
+    case .notice:
+      environment
+        .getOutput(for: .notice)
+        .appending(debugDetail.getOutput(for: .notice))
+    case .warning:
+      environment
+        .getOutput(for: .warning)
+        .appending(debugDetail.getOutput(for: .warning))
+    case .error:
+      environment
+        .getOutput(for: .error)
+        .appending(debugDetail.getOutput(for: .error))
+    case .critical:
+      environment
+        .getOutput(for: .critical)
+        .appending(debugDetail.getOutput(for: .critical))
     }
   }
 
@@ -85,13 +78,13 @@ public struct LogContext: LogContextStoring, LogContextReporting {
     return LogOutput(entries: list).appending(getOutput(for: scenario))
   }
 
-  public var labeledTrace: LogOutput { labeled(.trace) }
-  public var labeledDebug: LogOutput { labeled(.debug) }
-  public var labeledInfo: LogOutput { labeled(.info) }
-  public var labeledNotice: LogOutput { labeled(.notice) }
-  public var labeledWarning: LogOutput { labeled(.warning) }
-  public var labeledError: LogOutput { labeled(.error) }
-  public var labeledCritical: LogOutput { labeled(.critical) }
+  public var trace: LogOutput { labeled(.trace) }
+  public var debug: LogOutput { labeled(.debug) }
+  public var info: LogOutput { labeled(.info) }
+  public var notice: LogOutput { labeled(.notice) }
+  public var warning: LogOutput { labeled(.warning) }
+  public var error: LogOutput { labeled(.error) }
+  public var critical: LogOutput { labeled(.critical) }
 }
 
 extension LogContext {
