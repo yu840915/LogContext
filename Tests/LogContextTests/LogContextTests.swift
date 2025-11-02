@@ -36,7 +36,7 @@ struct LogContextTests {
         sut.addLabel("Second")
         sut.addLabel("Third")
 
-        #expect(sut.labeled(.critical).description == "(labels=[First][Second][Third])")
+        #expect(sut.labeledCritical.description == "(labels=[First][Second][Third])")
     }
 
     @Test
@@ -45,7 +45,7 @@ struct LogContextTests {
         sut.addLabel("First")
         sut[.id] = "12345"
 
-        #expect(sut.labeled(.critical).description == "(labels=[First], id=12345)")
+        #expect(sut.labeledCritical.description == "(labels=[First], id=12345)")
     }
 
     @Test
@@ -54,7 +54,7 @@ struct LogContextTests {
 
         sut[.id] = "12345"
         sut.setDebugDetail {
-            $0[.init(rawValue: "name")] = "Mike"
+            $0["name"] = "Mike"
         }
 
         #expect(sut.trace.description == "(id=12345)")
@@ -83,11 +83,11 @@ struct LogContextTests {
         }
 
         #expect(
-            sut.labeled(.critical).description
+            sut.labeledCritical.description
                 == "(labels=[outer], nested=(id=67890, Msg=Hello), id=12345)"
         )
         #expect(
-            sut.labeled(.info).description
+            sut.labeledInfo.description
                 == "(labels=[outer], nested=(id=67890))"
         )
     }
@@ -101,7 +101,7 @@ struct LogContextTests {
         }
 
         #expect(
-            sut.labeled(.critical).description
+            sut.labeledCritical.description
                 == "(strings=[\"one\", \"two\", \"three\"], numbers=[1, 2, 3])"
         )
     }
@@ -116,8 +116,8 @@ struct LogContextTests {
             }
         }
 
-        #expect(sut.labeled(.info).description == "(labels=[built], id=12345)")
-        #expect(sut.labeled(.critical).description == "(labels=[built], id=12345, name=Mike)")
+        #expect(sut.labeledInfo.description == "(labels=[built], id=12345)")
+        #expect(sut.labeledCritical.description == "(labels=[built], id=12345, name=Mike)")
     }
 
     @Test
@@ -142,11 +142,11 @@ struct LogContextTests {
         sut.addLabel("Nesting")
 
         #expect(
-            sut.labeled(.debug).description
+            sut.labeledDebug.description
                 == "(labels=[Nesting], users=[(id=1, name=Alice), (id=2, name=Bob)])"
         )
         #expect(
-            sut.labeled(.info).description
+            sut.labeledInfo.description
                 == "(labels=[Nesting], users=[(id=1), (id=2)])"
         )
     }
@@ -159,7 +159,7 @@ struct LogContextTests {
 
         sut.addLabel("Test")
 
-        #expect(sut.labeled(.info).description == "(labels=[Test], id=12345)")
+        #expect(sut.labeledInfo.description == "(labels=[Test], id=12345)")
     }
 
     @Test
@@ -172,9 +172,7 @@ struct LogContextTests {
             }
         }
 
-        logger.debug("\(sut.labeled(.debug))")
-        logger.debug("Hello", context: sut)
-        logger.trace("\(sut.labeled(.trace))")
-        logger.trace("Hello", context: sut)
+        logger.debug("\(sut.labeledDebug)")
+        logger.trace("\(sut.labeledTrace)")
     }
 }

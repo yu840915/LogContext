@@ -1,4 +1,3 @@
-
 public struct LogContext: LogContextStoring, LogContextReporting {
   private var labels: [String] = []
 
@@ -69,11 +68,11 @@ public struct LogContext: LogContextStoring, LogContextReporting {
     var context: LogContextStoring = debugDetail
     builder(&context)
     if let context = context as? LogContext.LogContextStore {
-      self.debugDetail = context
+      debugDetail = context
     }
   }
 
-  public func labeled(_ scenario: LogScenario) -> LogOutput {
+  func labeled(_ scenario: LogScenario) -> LogOutput {
     var list = [LogOutput.Entry]()
     if !labels.isEmpty {
       list.append(
@@ -86,6 +85,13 @@ public struct LogContext: LogContextStoring, LogContextReporting {
     return LogOutput(entries: list).appending(getOutput(for: scenario))
   }
 
+  public var labeledTrace: LogOutput { labeled(.trace) }
+  public var labeledDebug: LogOutput { labeled(.debug) }
+  public var labeledInfo: LogOutput { labeled(.info) }
+  public var labeledNotice: LogOutput { labeled(.notice) }
+  public var labeledWarning: LogOutput { labeled(.warning) }
+  public var labeledError: LogOutput { labeled(.error) }
+  public var labeledCritical: LogOutput { labeled(.critical) }
 }
 
 extension LogContext {

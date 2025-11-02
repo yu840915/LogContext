@@ -23,3 +23,19 @@ extension LogOutput {
     }
   }
 }
+
+struct OSLogEntry: StringInterpolationProtocol {
+  private(set) var values: [String]
+
+  init(literalCapacity: Int, interpolationCount: Int) {
+    values = []
+  }
+
+  mutating func appendLiteral(_ literal: StringLiteralType) {
+    values.append(literal)
+  }
+
+  mutating func appendInterpolation(_ value: LogContext) {
+    values.append(value.labeled(.debug).description)
+  }
+}
