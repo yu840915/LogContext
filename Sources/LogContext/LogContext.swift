@@ -138,3 +138,9 @@ extension LogContext {
     }
   }
 }
+
+extension LogContext {
+  public mutating func setError(_ error: Error) {
+    self[.error] = "\(error)"
+  }
+}
