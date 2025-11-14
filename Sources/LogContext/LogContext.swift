@@ -143,4 +143,10 @@ extension LogContext {
   public mutating func setError(_ error: Error) {
     self[.error] = "\(error)"
   }
+
+  public func adding(_ builder: StructBuilder<LogContext>) -> LogContext {
+    var copy = self
+    builder(&copy)
+    return copy
+  }
 }

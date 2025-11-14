@@ -175,4 +175,21 @@ struct LogContextTests {
         logger.debug("\(sut.debug)")
         logger.trace("\(sut.trace)")
     }
+
+    @Test
+    func makeCopyWithAddingWithBuilder() async throws {
+        let sut = LogContext {
+            $0[.id] = "12345"
+        }
+
+        let copy = sut.adding {
+            $0.addLabel("Copied")
+            $0.setDebugDetail {
+                $0[.init(rawValue: "user")] = "Bob"
+            }
+        }
+
+        #expect(sut.debug.description == "(id=12345)")
+        #expect(copy.debug.description == "(labels=[Copied], id=12345, user=Bob)")
+    }
 }
