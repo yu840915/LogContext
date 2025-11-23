@@ -1,4 +1,4 @@
-public struct LogContext: LogContextStoring, LogContextReporting {
+public struct LogContext: LogContextStoring, LogContextReporting, Sendable {
   public private(set) var labels: [String] = []
 
   private var environment = LogContextStore()
