@@ -1,5 +1,5 @@
 public struct LogContext: LogContextStoring, LogContextReporting, Sendable {
-  public private(set) var labels: [String] = []
+  public private(set) var labels: [Label] = []
 
   private var environment = LogContextStore()
   private var debugDetail = LogContextStore()
@@ -19,7 +19,17 @@ public struct LogContext: LogContextStoring, LogContextReporting, Sendable {
     }
   }
 
+  public mutating func addLabels(_ labels: [Label]) {
+    for label in labels {
+      addLabel(label)
+    }
+  }
+
   public mutating func addLabel(_ label: String) {
+    addLabel(Label(rawValue: label))
+  }
+
+  public mutating func addLabel(_ label: Label) {
     if labels.contains(label) { return }
     labels.append(label)
   }
@@ -89,6 +99,17 @@ public struct LogContext: LogContextStoring, LogContextReporting, Sendable {
 
 extension LogContext {
   public struct Key: Hashable, RawRepresentable, Sendable, CustomStringConvertible {
+    public let rawValue: String
+    public init(rawValue: String) {
+      self.rawValue = rawValue
+    }
+
+    public var description: String {
+      rawValue
+    }
+  }
+
+  public struct Label: RawRepresentable, Sendable, CustomStringConvertible, Equatable {
     public let rawValue: String
     public init(rawValue: String) {
       self.rawValue = rawValue
