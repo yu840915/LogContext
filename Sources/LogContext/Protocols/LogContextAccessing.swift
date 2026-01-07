@@ -1,8 +1,8 @@
-public protocol LogContextReading {
+public protocol LogContextReadable {
   var logContext: LogContext { get }
 }
 
-public protocol LogContextAccessing: LogContextReading {
+public protocol LogContextAccessible: LogContextReadable {
   var logContext: LogContext { get set }
 }
 
