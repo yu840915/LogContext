@@ -28,6 +28,10 @@ let package = Package(
             name: "LogContextValueFormat",
             dependencies: ["LogContext"],
         ),
+        .target(
+            name: "DebugToolkit",
+            dependencies: ["LogContext"],
+        ),
         .testTarget(
             name: "LogContextTests",
             dependencies: ["LogContext"],
