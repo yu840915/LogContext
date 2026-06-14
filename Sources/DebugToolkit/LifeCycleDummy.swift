@@ -2,13 +2,13 @@ import LogContext
 
 private let logger = Loggers.lifecycle.build()
 
-public final class LifeCycleDummy: Sendable {
+public final class LifecycleDummy: Sendable {
   let logContext: LogContext
 
   public init(logContextBuilder: StructBuilder<LogContext>? = nil) {
     let logContext = LogContext {
       logContextBuilder?(&$0)
-      $0.addLabel("LifeCycle")
+      $0.addLabel("Lifecycle")
     }
     self.logContext = logContext
     logger.debug("init \(logContext.debug)")

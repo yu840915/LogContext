@@ -16,6 +16,10 @@ let package = Package(
             targets: ["LogContext"],
         ),
         .library(
+            name: "DebugToolkit",
+            targets: ["DebugToolkit"],
+        ),
+        .library(
             name: "LogContextValueFormat",
             targets: ["LogContextValueFormat"],
         ),
